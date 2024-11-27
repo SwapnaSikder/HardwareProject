@@ -1,0 +1,31 @@
+#include <Servo.h>
+#define EXTRA_SERVO_PIN 2 // Pin for the extra servo
+Servo extraServo; // New servo motor
+unsigned long lastExtraServoMove = 0; // Timer for the extra servo motor
+int extraServoAngle = 0; // Starting angle
+bool extraServoIncreasing = true; // Direction flag for oscillation
+void setup() {
+extraServo.attach(EXTRA_SERVO_PIN); // Attach the extra servo motor
+extraServo.write(0); // Initialize the extra servo to 0°
+}
+void loop() {
+// Control the extra servo motor to oscillate continuously
+unsigned long currentMillis = millis();
+if (currentMillis - lastExtraServoMove >= 50) { // 0.05 seconds delay
+lastExtraServoMove = currentMillis;
+if (extraServoIncreasing) {
+extraServoAngle += 10; // Increment angle
+if (extraServoAngle >= 30) { // Upper limit
+extraServoAngle = 30;
+extraServoIncreasing = false; // Change direction
+}
+} else {
+extraServoAngle -= 10; // Decrement angle
+if (extraServoAngle <= 0) { // Lower limit
+extraServoAngle = 0;
+extraServoIncreasing = true; // Change direction
+}
+}
+extraServo.write(extraServoAngle); // Set the new angle
+}
+}
